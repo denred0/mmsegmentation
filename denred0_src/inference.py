@@ -41,15 +41,8 @@ def inference(exp_name, images_dir, checkpoint, images_ext, output_folder, creat
                 dict(type='Collect', keys=['img']),
             ])
     ]
-
     cfg.data.test.pipeline = cfg.test_pipeline
 
-    # classes = tuple(LASER_CLASSES)
-    # cfg.checkpoint_config.meta = dict(
-    #     CLASSES=classes,
-    #     PALETTE=PALETTE)
-
-    # checkpoint.PALETTE = PALETTE
     model = init_segmentor(cfg, checkpoint, device=device)
 
     # get all images
@@ -97,11 +90,9 @@ def create_border(im):
     return border_image
 
 
-# checkpoint = 'denred0_work_dirs/deeplabv3plus_r101-d8_512x512_40k_voc12aug/iter_7000.pth'
-
 
 if __name__ == '__main__':
-    checkpoint = 'denred0_work_dirs/deeplabv3plus_r101-d8_512x512_40k_voc12aug/latest.pth'
+    checkpoint = 'denred0_work_dirs/deeplabv3plus_r101-d8_512x512_40k_voc12aug/iter_11000.pth'
     images_dir = Path('denred0_data/data/imgs')
     images_ext = ['*.png']
     exp_name = 'deeplabv3plus_r101_d8_512x512_40k_voc12aug'
