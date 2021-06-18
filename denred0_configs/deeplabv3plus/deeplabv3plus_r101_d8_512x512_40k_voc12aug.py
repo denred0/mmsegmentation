@@ -14,14 +14,13 @@ from mmseg.apis import train_segmentor, inference_segmentor
 from denred0_src.classes import LASER_CLASSES, PALETTE
 
 
-def create_config():
+def create_config(data_root, exp_name):
     # convert dataset annotation to semantic segmentation map
-    data_root = 'denred0_data/data/'
-    img_dir = 'imgs'
+    img_dir = 'images'
     ann_dir = 'masks_rgb'
     split_dir = 'splits'
     test_split = 0.2
-    model_name = 'deeplabv3plus_r101-d8_512x512_40k_voc12aug'
+
 
     # define class and palette for better visualization
     classes = tuple(LASER_CLASSES)  # ('background', 'picture', 'pushed', 'wrinkle', 'break')
@@ -140,7 +139,7 @@ def create_config():
     # cfg.init_cfg = dict(type='Pretrained', checkpoint='denred0_checkpoints/deeplabv3plus_r101-d8_512x512_40k_voc12aug_20200613_205333-faf03387.pth')
 
     # Set up working dir to save files and logs.
-    cfg.work_dir = './denred0_work_dirs/' + model_name
+    cfg.work_dir = './denred0_work_dirs/' + exp_name
 
     cfg.runner.max_iters = 42000
     cfg.log_config.interval = 100

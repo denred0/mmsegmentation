@@ -10,7 +10,7 @@ from mmseg.apis import inference_segmentor, init_segmentor
 
 from denred0_configs.deeplabv3plus.deeplabv3plus_r101_d8_512x512_40k_voc12aug import create_config
 from classes import LASER_CLASSES, PALETTE
-from utils import get_all_files_in_folder
+from utils import get_all_files_in_folder, create_border
 
 
 def inference(exp_name, images_dir, checkpoint, images_ext, output_folder, create_visualization, device='cuda:0'):
@@ -75,19 +75,6 @@ def inference(exp_name, images_dir, checkpoint, images_ext, output_folder, creat
             cv2.imwrite(str(output_folder.joinpath(exp_name).joinpath('visualization').joinpath(image_path.name)), vis)
 
 
-def create_border(im):
-    bordersize = 2
-    border_image = cv2.copyMakeBorder(
-        im,
-        top=bordersize,
-        bottom=bordersize,
-        left=bordersize,
-        right=bordersize,
-        borderType=cv2.BORDER_CONSTANT,
-        value=[255, 0, 255]
-    )
-
-    return border_image
 
 
 
