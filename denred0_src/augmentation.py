@@ -86,12 +86,32 @@ def create_augmented_imgs_for_dataset(data_dir, images_ext, aug_count=1):
     print('\nTotal images {}'.format(len(all_images)))
     print('Augmentation...')
 
-    transform = A.Compose(
-        [A.OneOf([
-            # A.Rotate(limit=35, p=1),
-            A.HorizontalFlip(p=1),
-            A.VerticalFlip(p=1),
-            A.Transpose(p=1)], p=1)], p=1)
+    # transform = A.Compose(
+    #     [A.OneOf([
+    #         # A.Rotate(limit=35, p=1),
+    #         A.HorizontalFlip(p=1),
+    #         A.VerticalFlip(p=1),
+    #         A.Transpose(p=1)], p=1)], p=1)
+
+    transform = A.Compose([
+        # A.OneOf([
+        #     A.HueSaturationValue(hue_shift_limit=0.2, sat_shift_limit=0.2,
+        #                          val_shift_limit=0.2, p=0.9),
+        #     A.RandomBrightnessContrast(brightness_limit=0.2,
+        #                                contrast_limit=0.2, p=0.9),
+        # ], p=0.9),
+        A.HorizontalFlip(p=0.5),
+        A.VerticalFlip(p=0.5),
+        A.RandomRotate90(p=0.5),
+        A.Transpose(p=0.5),
+        A.JpegCompression(quality_lower=85, quality_upper=95, p=0.1),
+        A.OneOf([
+            A.Blur(blur_limit=3, p=1.0),
+            A.MedianBlur(blur_limit=3, p=1.0),
+            A.MotionBlur(p=1)], p=0.05),
+        # A.Resize(height=img_size, width=img_size, p=1),
+        # A.Cutout(num_holes=8, max_h_size=64, max_w_size=64, fill_value=0, p=0.5),
+    ], p=1.0)
 
     for i, (img_path, mask_path) in tqdm(enumerate(zip(all_images, all_masks)), total=len(all_images)):
         img = cv2.imread(str(img_path), cv2.IMREAD_COLOR)
@@ -121,18 +141,18 @@ def create_augmented_imgs_for_dataset(data_dir, images_ext, aug_count=1):
 
 
 if __name__ == '__main__':
-    aug_count = 2
-    data_dir = Path('denred0_data/augmentation/images_per_classes')
-    images_ext = ['*.png']
-    for cl in LASER_CLASSES:
-        class_data_dir = data_dir.joinpath(cl)
-        create_augmented_imgs_for_class(data_dir=class_data_dir,
-                                        label=cl,
-                                        images_ext=images_ext,
-                                        aug_count=aug_count)
-
-    # data_dir_dataset = Path('denred0_data/augmentation/whole_dataset')
+    aug_count = 1
+    # data_dir = Path('denred0_data/augmentation/images_per_classes')
     # images_ext = ['*.png']
-    # create_augmented_imgs_for_dataset(data_dir=data_dir_dataset,
-    #                                   images_ext=images_ext,
-    #                                   aug_count=aug_count)
+    # for cl in LASER_CLASSES:
+    #     class_data_dir = data_dir.joinpath(cl)
+    #     create_augmented_imgs_for_class(data_dir=class_data_dir,
+    #                                     label=cl,
+    #                                     images_ext=images_ext,
+    #                                     aug_count=aug_count)
+
+    data_dir_dataset = Path('denred0_data/augmentation/whole_dataset')
+    images_ext = ['*.png']
+    create_augmented_imgs_for_dataset(data_dir=data_dir_dataset,
+                                      images_ext=images_ext,
+                                      aug_count=aug_count)

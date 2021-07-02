@@ -42,6 +42,7 @@ def create_config(data_root, exp_name):
     # split train/val set randomly
 
     mmcv.mkdir_or_exist(osp.join(data_root, split_dir))
+
     filename_list = [osp.splitext(filename)[0] for filename in mmcv.scandir(
         osp.join(data_root, ann_dir), suffix='.png')]
     with open(osp.join(data_root, split_dir, 'train.txt'), 'w') as f:
@@ -61,7 +62,7 @@ def create_config(data_root, exp_name):
             super().__init__(img_suffix='.png', seg_map_suffix='.png', split=split, **kwargs)
             assert osp.exists(self.img_dir) and self.split is not None
 
-    cfg = Config.fromfile('configs/deeplabv3plus/deeplabv3plus_r101-d8_512x512_40k_voc12aug.py')
+    cfg = Config.fromfile('configs/pspnet/pspnet_r101-d8_512x512_40k_voc12aug.py')
 
     # Since we use ony one GPU, BN is used instead of SyncBN
     cfg.norm_cfg = dict(type='BN', requires_grad=True)
@@ -135,13 +136,13 @@ def create_config(data_root, exp_name):
 
     # We can still use the pre-trained Mask RCNN model though we do not need to
     # use the mask branch
-    cfg.load_from = 'denred0_checkpoints/deeplabv3plus_r101-d8_512x512_40k_voc12aug_20200613_205333-faf03387.pth'
+    cfg.load_from = 'denred0_checkpoints/pspnet_r101-d8_512x512_40k_voc12aug_20200613_161222-bc933b18.pth'
     # cfg.init_cfg = dict(type='Pretrained', checkpoint='denred0_checkpoints/deeplabv3plus_r101-d8_512x512_40k_voc12aug_20200613_205333-faf03387.pth')
 
     # Set up working dir to save files and logs.
     cfg.work_dir = './denred0_work_dirs/' + exp_name
 
-    cfg.runner.max_iters = 10000
+    cfg.runner.max_iters = 42000
     cfg.log_config.interval = 100
     cfg.evaluation.interval = 1000
     cfg.checkpoint_config.interval = 1000

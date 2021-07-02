@@ -9,6 +9,7 @@ from tqdm import tqdm
 from mmseg.apis import inference_segmentor, init_segmentor
 
 from denred0_configs.deeplabv3plus.deeplabv3plus_r101_d8_512x512_40k_voc12aug import create_config
+# from denred0_configs.pspnet.pspnet_r101_d8_512x512_40k_voc12aug import create_config
 from classes import LASER_CLASSES, PALETTE
 from utils import get_all_files_in_folder, create_border
 
@@ -60,15 +61,15 @@ def inference(exp_name, images_dir, checkpoint, images_ext, data_root_cfg, outpu
 
         if create_visualization:
             image_orig = cv2.imread(str(image_path), cv2.IMREAD_COLOR)
-            mask_orig = cv2.imread('denred0_data/data_train/masks_rgb/' + image_path.name, cv2.IMREAD_COLOR)
+            mask_orig = cv2.imread('denred0_data/data_train/dataset/masks_rgb/' + image_path.name, cv2.IMREAD_COLOR)
             mask_res = cv2.imread(
                 str(output_folder.joinpath(exp_name).joinpath('images_result').joinpath(image_path.name)),
                 cv2.IMREAD_COLOR)
 
             # create borders
-            image_orig = create_border(image_orig)
-            mask_orig = create_border(mask_orig)
-            mask_res = create_border(mask_res)
+            # image_orig = create_border(image_orig)
+            # mask_orig = create_border(mask_orig)
+            # mask_res = create_border(mask_res)
 
             # concatenate images
             vis = np.concatenate((image_orig, mask_orig, mask_res), axis=1)
@@ -77,11 +78,11 @@ def inference(exp_name, images_dir, checkpoint, images_ext, data_root_cfg, outpu
 
 
 if __name__ == '__main__':
-    checkpoint = 'denred0_work_dirs/deeplabv3plus_r101-d8_512x512_40k_voc12aug_aug_dataset/iter_9000.pth'
-    images_dir = Path('denred0_data/data_train/images')
+    checkpoint = 'denred0_work_dirs/deeplabv3plus_r101_d8_512x512_40k_voc12aug_aug_dataset/iter_10000.pth'
+    images_dir = Path('denred0_data/data_train/dataset/images')
     images_ext = ['*.png']
-    data_root_cfg = 'denred0_data/data_train_augmentation/'
-    exp_name = 'deeplabv3plus_r101_d8_512x512_40k_voc12aug_aug_dataset'
+    data_root_cfg_train = 'denred0_data/data_train_augmentation/'
+    exp_name = 'deeplabv3plus_r101_d8_512x512_40k_voc12aug'
     device = 'cuda:0'
     output_folder = Path('denred0_data/inference')
     create_visualization = True
@@ -90,7 +91,7 @@ if __name__ == '__main__':
               images_dir=images_dir,
               checkpoint=checkpoint,
               images_ext=images_ext,
-              data_root_cfg=data_root_cfg,
+              data_root_cfg=data_root_cfg_train,
               output_folder=output_folder,
               create_visualization=create_visualization,
               device=device)

@@ -21,7 +21,6 @@ def create_config(data_root, exp_name):
     split_dir = 'splits'
     test_split = 0.2
 
-
     # define class and palette for better visualization
     classes = tuple(LASER_CLASSES)  # ('background', 'picture', 'pushed', 'wrinkle', 'break')
     # palette = [[255, 255, 255], [0, 0, 255], [0, 255, 0], [255, 0, 0], [255, 255, 0]]
@@ -65,7 +64,28 @@ def create_config(data_root, exp_name):
 
     # Since we use ony one GPU, BN is used instead of SyncBN
     cfg.norm_cfg = dict(type='BN', requires_grad=True)
-    cfg.model.backbone.norm_cfg = cfg.norm_cfg
+
+    cfg.model.backbone = dict(
+        type='VisionTransformer',
+        img_size=(512, 512),
+        patch_size=16,
+        in_channels=3,
+        embed_dim=768,
+        depth=12,
+        mlp_ratio=4,
+        qkv_bias=True,
+        qk_scale=None,
+        representation_size=None,
+        drop_rate=0.0,
+        attn_drop_rate=0.0,
+        norm_cfg=dict(type='LN'),
+        act_cfg=dict(type='GELU'),
+        norm_eval=False,
+        pretrained = None)
+
+    # cfg.model.pretrained = 'open-mmlab://resnet50_v1c'  # 'https://github.com/rwightman/pytorch-image-models/releases/download/v0.1-vitjx/jx_vit_base_p16_224-80ecf9dd.pth'
+
+    # cfg.model.backbone.norm_cfg = cfg.norm_cfg
     cfg.model.decode_head.norm_cfg = cfg.norm_cfg
     cfg.model.auxiliary_head.norm_cfg = cfg.norm_cfg
 
@@ -135,13 +155,13 @@ def create_config(data_root, exp_name):
 
     # We can still use the pre-trained Mask RCNN model though we do not need to
     # use the mask branch
-    cfg.load_from = 'denred0_checkpoints/deeplabv3plus_r101-d8_512x512_40k_voc12aug_20200613_205333-faf03387.pth'
+    cfg.load_from = 'denred0_checkpoints/jx_vit_base_p16_224-80ecf9dd.pth'
     # cfg.init_cfg = dict(type='Pretrained', checkpoint='denred0_checkpoints/deeplabv3plus_r101-d8_512x512_40k_voc12aug_20200613_205333-faf03387.pth')
 
     # Set up working dir to save files and logs.
     cfg.work_dir = './denred0_work_dirs/' + exp_name
 
-    cfg.runner.max_iters = 10000
+    cfg.runner.max_iters = 42000
     cfg.log_config.interval = 100
     cfg.evaluation.interval = 1000
     cfg.checkpoint_config.interval = 1000
