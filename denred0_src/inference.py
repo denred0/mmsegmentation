@@ -61,7 +61,7 @@ def inference(exp_name, images_dir, checkpoint, images_ext, data_root_cfg, outpu
 
         if create_visualization:
             image_orig = cv2.imread(str(image_path), cv2.IMREAD_COLOR)
-            mask_orig = cv2.imread('denred0_data/data_train/dataset/masks_rgb/' + image_path.name, cv2.IMREAD_COLOR)
+            mask_orig = cv2.imread('denred0_data/data_train_augmentation/masks_rgb/' + image_path.name, cv2.IMREAD_COLOR)
             mask_res = cv2.imread(
                 str(output_folder.joinpath(exp_name).joinpath('images_result').joinpath(image_path.name)),
                 cv2.IMREAD_COLOR)
@@ -82,7 +82,7 @@ if __name__ == '__main__':
     images_dir = Path('denred0_data/data_train/dataset/images')
     images_ext = ['*.png']
     data_root_cfg_train = 'denred0_data/data_train_augmentation/'
-    exp_name = 'deeplabv3plus_r101_d8_512x512_40k_voc12aug'
+    exp_name = 'deeplabv3plus_r101_d8_512x512_40k_voc12aug_aug_dataset'
     device = 'cuda:0'
     output_folder = Path('denred0_data/inference')
     create_visualization = True

@@ -20,6 +20,11 @@ def create_images_for_labeling():
         shutil.rmtree(dirpath)
     Path(dirpath).mkdir(parents=True, exist_ok=True)
 
+    dirpath = Path('denred0_data/prepare_images_for_labeling/for_labeling_result')
+    if dirpath.exists() and dirpath.is_dir():
+        shutil.rmtree(dirpath)
+    Path(dirpath).mkdir(parents=True, exist_ok=True)
+
     images_visual = get_all_files_in_folder(Path('denred0_data/prepare_images_for_labeling/visualization'), ['*.png'])
 
     root_directory = 'denred0_data/prepare_images_for_labeling/all_data'
@@ -55,6 +60,7 @@ def create_images_for_labeling():
 
                 if np.sum(image_mark) == 0:
                     cv2.imwrite('denred0_data/prepare_images_for_labeling/not_labeled/' + im.name, orig_image)
+
 
 
 if __name__ == '__main__':

@@ -135,7 +135,8 @@ def create_config(data_root, exp_name):
 
     # We can still use the pre-trained Mask RCNN model though we do not need to
     # use the mask branch
-    cfg.load_from = 'denred0_checkpoints/deeplabv3plus_r101-d8_512x512_40k_voc12aug_20200613_205333-faf03387.pth'
+    # cfg.load_from = 'denred0_checkpoints/deeplabv3plus_r101-d8_512x512_40k_voc12aug_20200613_205333-faf03387.pth'
+    cfg.resume_from = 'denred0_work_dirs/deeplabv3plus_r101_d8_512x512_40k_voc12aug_aug_dataset/iter_8000.pth'
     # cfg.init_cfg = dict(type='Pretrained', checkpoint='denred0_checkpoints/deeplabv3plus_r101-d8_512x512_40k_voc12aug_20200613_205333-faf03387.pth')
 
     # Set up working dir to save files and logs.

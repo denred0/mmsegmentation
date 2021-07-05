@@ -104,11 +104,11 @@ def create_augmented_imgs_for_dataset(data_dir, images_ext, aug_count=1):
         A.VerticalFlip(p=0.5),
         A.RandomRotate90(p=0.5),
         A.Transpose(p=0.5),
-        A.JpegCompression(quality_lower=85, quality_upper=95, p=0.1),
+        A.JpegCompression(quality_lower=85, quality_upper=95, p=0.5),
         A.OneOf([
             A.Blur(blur_limit=3, p=1.0),
             A.MedianBlur(blur_limit=3, p=1.0),
-            A.MotionBlur(p=1)], p=0.05),
+            A.MotionBlur(p=1.0)], p=0.5),
         # A.Resize(height=img_size, width=img_size, p=1),
         # A.Cutout(num_holes=8, max_h_size=64, max_w_size=64, fill_value=0, p=0.5),
     ], p=1.0)

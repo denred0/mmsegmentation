@@ -20,7 +20,7 @@ def convert_json_to_masks(input_dir, output_dir, img_ext):
     if dirpath.exists() and dirpath.is_dir():
         shutil.rmtree(dirpath)
     Path(dirpath).mkdir(parents=True, exist_ok=True)
-    dirpath = output_dir.joinpath('imgs')
+    dirpath = output_dir.joinpath('images')
     Path(dirpath).mkdir(parents=True, exist_ok=True)
     dirpath = output_dir.joinpath('masks')
     Path(dirpath).mkdir(parents=True, exist_ok=True)
@@ -54,7 +54,7 @@ def convert_json_to_masks(input_dir, output_dir, img_ext):
 
         # out_mask_path = "{}masks/{}.png".format(dataset_root, j.split(".")[0])
         # out_image_path = "{}imgs/{}.png".format(dataset_root, j.split(".")[0])
-        cv2.imwrite(str(output_dir.joinpath('imgs').joinpath(f_json.stem + img_ext)), orig_image)
+        cv2.imwrite(str(output_dir.joinpath('images').joinpath(f_json.stem + img_ext)), orig_image)
         cv2.imwrite(str(output_dir.joinpath('masks').joinpath(f_json.stem + img_ext)), mask_image)
 
         # classes = tuple(LASER_CLASSES)
