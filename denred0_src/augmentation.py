@@ -104,7 +104,7 @@ def create_augmented_imgs_for_dataset(data_dir, images_ext, aug_count=1):
         A.VerticalFlip(p=0.5),
         A.RandomRotate90(p=0.5),
         A.Transpose(p=0.5),
-        A.JpegCompression(quality_lower=85, quality_upper=95, p=0.5),
+        A.ImageCompression(quality_lower=85, quality_upper=95, p=0.5),
         A.OneOf([
             A.Blur(blur_limit=3, p=1.0),
             A.MedianBlur(blur_limit=3, p=1.0),
@@ -124,12 +124,12 @@ def create_augmented_imgs_for_dataset(data_dir, images_ext, aug_count=1):
 
             cv2.imwrite(
                 str(Path(data_dir).joinpath('aug').joinpath('images').joinpath(
-                    img_path.name + '_aug_' + str(idx) + '.png')),
+                    img_path.stem + '_aug_' + str(idx) + '.png')),
                 transformed_image)
 
             cv2.imwrite(
                 str(Path(data_dir).joinpath('aug').joinpath('masks').joinpath(
-                    img_path.name + '_aug_' + str(idx) + '.png')),
+                    img_path.stem + '_aug_' + str(idx) + '.png')),
                 transformed_mask)
 
             transformed_mask = np.stack((transformed_mask,) * 3, axis=-1)
@@ -137,7 +137,7 @@ def create_augmented_imgs_for_dataset(data_dir, images_ext, aug_count=1):
             seg_img.putpalette(np.array(PALETTE, dtype=np.uint8))
             seg_img.save(
                 str(Path(data_dir).joinpath('aug').joinpath('masks_rgb').joinpath(
-                    img_path.name + '_aug_' + str(idx) + '.png')))
+                    img_path.stem + '_aug_' + str(idx) + '.png')))
 
 
 if __name__ == '__main__':
