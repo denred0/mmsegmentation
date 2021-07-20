@@ -16,12 +16,13 @@ from denred0_src.classes import LASER_CLASSES, PALETTE
 from denred0_src.train_test_split import create_splits_files
 
 
-def create_config(data_root, exp_name):
+def create_config(data_root, exp_name, do_test_split =False):
     # convert dataset annotation to semantic segmentation map
     img_dir = 'images'
     ann_dir = 'masks_rgb'
     split_dir = 'splits'
-    test_split = 0.2
+    val_split = 0.3
+    test_split = 0.5
 
     # define class and palette for better visualization
     classes = tuple(LASER_CLASSES)  # ('background', 'picture', 'pushed', 'wrinkle', 'break')
@@ -52,8 +53,8 @@ def create_config(data_root, exp_name):
     # with open(osp.join(data_root, split_dir, 'val.txt'), 'w') as f:
     #     # select last 1/5 as train set
     #     f.writelines(line + '\n' for line in filename_list[train_length:])
-
-    create_splits_files(root_dir=Path('denred0_data/data_train_augmentation'), test_split=test_split)
+    if do_test_split:
+        create_splits_files(root_dir=Path('denred0_data/data_train_augmentation'), val_split=val_split, test_split=test_split)
 
     @DATASETS.register_module()
     class RTT_defects(CustomDataset):
@@ -134,18 +135,18 @@ def create_config(data_root, exp_name):
     cfg.data.test.img_dir = img_dir
     cfg.data.test.ann_dir = ann_dir
     cfg.data.test.pipeline = cfg.test_pipeline
-    cfg.data.test.split = 'splits/val.txt'
+    cfg.data.test.split = 'splits/test.txt'
 
     # We can still use the pre-trained Mask RCNN model though we do not need to
     # use the mask branch
     cfg.load_from = 'denred0_checkpoints/deeplabv3plus_r101-d8_512x512_40k_voc12aug_20200613_205333-faf03387.pth'
-    # cfg.resume_from = 'denred0_work_dirs/deeplabv3plus_r101_d8_512x512_40k_voc12aug_aug_dataset/iter_4000.pth'
+    # cfg.resume_from = 'denred0_work_dirs/deeplabv3plus_r101_d8_512x512_40k_voc12aug_aug_dataset/iter_10000.pth'
     # cfg.init_cfg = dict(type='Pretrained', checkpoint='denred0_checkpoints/deeplabv3plus_r101-d8_512x512_40k_voc12aug_20200613_205333-faf03387.pth')
 
     # Set up working dir to save files and logs.
     cfg.work_dir = './denred0_work_dirs/' + exp_name
 
-    cfg.runner.max_iters = 10000
+    cfg.runner.max_iters = 40000
     cfg.log_config.interval = 100
     cfg.evaluation.interval = 1000
     cfg.checkpoint_config.interval = 1000
