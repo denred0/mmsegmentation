@@ -79,18 +79,11 @@ show = True
 opacity = 0.5
 show_dir = 'denred0_test_results'
 
-# if not distributed:
+
 model = MMDataParallel(model, device_ids=[0])
 outputs = single_gpu_test(model, data_loader, show, show_dir,
                           efficient_test, opacity)
-# else:
-#     model = MMDistributedDataParallel(
-#         model.cuda(),
-#         device_ids=[torch.cuda.current_device()],
-#         broadcast_buffers=False)
-#     outputs = multi_gpu_test(model, data_loader, args.tmpdir,
-#                              args.gpu_collect, efficient_test)
-# eval = 'mAP'
+
 eval = ['mIoU', 'mDice', 'mFscore']
 rank, _ = get_dist_info()
 if rank == 0:
